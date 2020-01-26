@@ -8,7 +8,7 @@
 <form action="SimpleWebApplication_war_exploded/index" method="post">
     Imię: <input type="text" name="firstName" width="30"/>
     Nazwisko: <input type="text" name="lastName" width="30"/>
-    Data urodzenia: <input type="date" name="birthDate" width="30"/>
+    Data: <input type="date" name="birthDate" width="30"/>
     <input type="submit" value="Dodaj"/>
 </form>
 </body>

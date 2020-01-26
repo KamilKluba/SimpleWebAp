@@ -15,13 +15,21 @@ public class index extends HttpServlet {
         PrintWriter out = response.getWriter();
         try {
             Connection connection = main.createConnection();
-            PreparedStatement statement = connection.prepareStatement("insert into Person (first_name, last_name, birth_date) values (?, ?, ?);");
-            statement.setString(1, request.getParameter("firstName"));
-            statement.setString(2, request.getParameter("lastName"));
-            statement.setDate(3, Date.valueOf(request.getParameter("birthDate")));
-            statement.execute();
-            connection.close();
-            out.println("<h1>Dodano do bazy!</h1>");
+            PreparedStatement checkStatement = connection.prepareStatement("select id from Person where birth_date = ?");
+            checkStatement.setDate(1, new Date(Date.valueOf(request.getParameter("birthDate")).getTime() + 86400000));
+            ResultSet resultId = checkStatement.executeQuery();
+            if(resultId.next()) {
+                out.println("<h1>Podana data istnieje w bazie!</h1>");
+            }
+            else{
+                PreparedStatement statement = connection.prepareStatement("insert into Person (first_name, last_name, birth_date) values (?, ?, ?);");
+                statement.setString(1, request.getParameter("firstName"));
+                statement.setString(2, request.getParameter("lastName"));
+                statement.setDate(3, new Date(Date.valueOf(request.getParameter("birthDate")).getTime() + 86400000));
+                statement.execute();
+                connection.close();
+                out.println("<h1>Dodano do bazy!</h1>");
+            }
         } catch (SQLException e) {
             e.printStackTrace();
             out.println("<h1>Nie udało się dodać do bazy!</h1>");
